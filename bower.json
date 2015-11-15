@@ -1,0 +1,22 @@
+{
+  "name": "auth-ng",
+  "authors": [
+    "konradhalas <halas.konrad@gmail.com>"
+  ],
+  "description": "Easier authentication and authorization within your Angular app.",
+  "main": "src/auth.service.js",
+  "moduleType": [],
+  "keywords": [
+    "authentication",
+    "authorization",
+    "API"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/konradhalas/auth-ng",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test"
+  ]
+}
