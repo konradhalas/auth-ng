@@ -6,8 +6,18 @@
     .service('authService', AuthService)
     .provider('authService', AuthServiceProvider);
 
-  function AuthServiceProvider($httpProvider) {}
+  function AuthServiceProvider() {
+    this.$get = function($http) {
+      return new AuthService($http)
+    };
+  }
 
-  function AuthService() {}
+  function AuthService($http) {
+
+    this.login = function (user) {
+
+    };
+
+  }
 
 })();
