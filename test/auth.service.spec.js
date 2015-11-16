@@ -2,13 +2,21 @@
   'use strict';
 
   describe('authService', function() {
-    var authService, $httpBackend;
+    var $httpBackend, authService, tokenStorageService;
+    var config = {
+      baseUrl: 'http://test.com',
+      loginPath: '/auth/login',
+      tokenKey: 'token'
+    };
 
-    beforeEach(module('auth-ng'));
+    beforeEach(module('auth-ng', function (authServiceProvider) {
+      authServiceProvider.configure(config);
+    }));
 
-    beforeEach(inject(function(_authService_,  _$httpBackend_) {
+    beforeEach(inject(function(_authService_,  _$httpBackend_, _tokenStorageService_) {
       authService = _authService_;
       $httpBackend =  _$httpBackend_;
+      tokenStorageService = _tokenStorageService_;
     }));
 
     it('should login user', function() {
@@ -16,12 +24,15 @@
         'username': 'test',
         'password': 'test'
       };
-      $httpBackend.expectPOST('http://test.com/auth/login', user).respond(200);
+      var response = {
+        token: '1234'
+      };
+      $httpBackend.expectPOST(config.baseUrl + config.loginPath, user).respond(200, response);
 
       authService.login(user);
 
       $httpBackend.flush();
-      expect(authService.isLoggedIn()).toBeTruthy()
+      expect(tokenStorageService.get()).toBe(response.token);
     });
 
     afterEach(function() {
