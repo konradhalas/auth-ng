@@ -41,6 +41,10 @@
       });
     };
 
+    this.logout = function () {
+      tokenStorageService.remove();
+    };
+
   }
 
 })();

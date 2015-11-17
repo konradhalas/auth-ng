@@ -52,6 +52,14 @@
       $httpBackend.flush();
     });
 
+    it('should remove token', function () {
+      tokenStorageService.set('1234');
+
+      authService.logout();
+
+      expect(tokenStorageService.has()).toBeFalsy();
+    });
+
     afterEach(function() {
      $httpBackend.verifyNoOutstandingExpectation();
      $httpBackend.verifyNoOutstandingRequest();
