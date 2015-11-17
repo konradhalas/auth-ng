@@ -2,7 +2,7 @@
   'use strict';
 
   describe('authService', function() {
-    var $http, $httpBackend, authService, tokenStorageService;
+    var $http, $httpBackend, $rootScope, authService, tokenStorageService;
     var config = {
       baseUrl: 'http://test.com',
       loginPath: '/auth/login',
@@ -15,9 +15,10 @@
       authServiceProvider.configure(config);
     }));
 
-    beforeEach(inject(function(_$http_, _$httpBackend_, _authService_, _tokenStorageService_) {
+    beforeEach(inject(function(_$http_, _$httpBackend_, _$rootScope_, _authService_, _tokenStorageService_) {
       $http = _$http_;
       $httpBackend =  _$httpBackend_;
+      $rootScope = _$rootScope_;
       authService = _authService_;
       tokenStorageService = _tokenStorageService_;
     }));
@@ -58,6 +59,16 @@
       authService.logout();
 
       expect(tokenStorageService.has()).toBeFalsy();
+    });
+
+    it('should emit login required event', function () {
+      $httpBackend.expectPOST(config.baseUrl).respond(401);
+      spyOn($rootScope, '$emit');
+
+      $http.post(config.baseUrl);
+
+      $httpBackend.flush();
+      expect($rootScope.$emit).toHaveBeenCalledWith('auth-ng:loginRequired');
     });
 
     afterEach(function() {

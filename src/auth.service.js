@@ -11,13 +11,19 @@
 
     var configureInterceptors = function () {
       $httpProvider.interceptors.push(
-        ['$q', '$location', 'tokenStorageService', function($q, $location, tokenStorageService) {
+        ['$q', '$rootScope', 'tokenStorageService', function($q, $rootScope, tokenStorageService) {
         return {
           request: function(config) {
             if (config.url.indexOf(that.config.baseUrl) === 0 && tokenStorageService.has()) {
               config.headers[that.config.headerName] = that.config.headerPrefix + tokenStorageService.get();
             }
             return config || $q.when(config);
+          },
+          responseError: function (rejection) {
+            if (rejection.status === 401) {
+              $rootScope.$emit('auth-ng:loginRequired');
+            }
+            return $q.reject(rejection)
           }
         };
       }]);
